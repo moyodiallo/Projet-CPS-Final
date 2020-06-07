@@ -1,0 +1,7 @@
+#!/bin/bash
+./clean_log
+./start-performance-4-broker brokerURI-0&
+./start-performance-4-broker brokerURI-1&
+./start-performance-4-broker brokerURI-2&
+./start-performance-4-broker brokerURI-3&
+

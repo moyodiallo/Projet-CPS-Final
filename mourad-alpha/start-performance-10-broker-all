@@ -1,0 +1,13 @@
+#!/bin/bash
+./clean_log
+./start-performance-10-broker brokerURI-0&
+./start-performance-10-broker brokerURI-1&
+./start-performance-10-broker brokerURI-2&
+./start-performance-10-broker brokerURI-3&
+./start-performance-10-broker brokerURI-4&
+./start-performance-10-broker brokerURI-5&
+./start-performance-10-broker brokerURI-6&
+./start-performance-10-broker brokerURI-7&
+./start-performance-10-broker brokerURI-8&
+./start-performance-10-broker brokerURI-9&
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+java -ea -Xms2m -cp lib/jing.jar:lib/bcm.jar:. -Djava.security.manager \
+    -Djava.security.policy=policies/dcvm.policy \
+    fr.sorbonne_u.components.cvm.utils.DCVMCyclicBarrier\
+    config.xml/config-dcvm-performance-10brokers.xml

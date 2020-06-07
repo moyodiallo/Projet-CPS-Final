@@ -1,0 +1,42 @@
+<deployment>
+    <hosts>
+        <host name="localhost" dir="../" />
+    </hosts>
+    <cyclicBarrier hostname="localhost" port="55253" />
+    <globalRegistry hostname="localhost" port="55252" />
+    <rmiRegistryPort no="55999" />
+    <jvms2hostnames>
+        
+        <jvm2hostname 
+            jvmuri="brokerURI-0" rmiRegistryCreator="true" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-1" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-2" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-3" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-4" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-5" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-6" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-7" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-8" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-9" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance10brokers" />
+
+    </jvms2hostnames>
+</deployment>

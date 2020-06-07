@@ -1,0 +1,45 @@
+<project name="CPS-2020" default="compile" basedir=".">
+
+    <description>
+    Ant Configuration File
+    </description>
+
+    <property name="compile" location="bin"/>
+    <property name="bcm.examples" location="examples"/>
+    <property name="bcm.source" location="src"/>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${compile}"/>
+    </target>
+
+    <path id="cps.sources">
+        <pathelement path="${bcm.source}/"/>
+        <pathelement path="${bcm.examples}/"/>
+    </path>
+
+    <path id="cps.classpath">
+        <pathelement path="lib/javassist.jar" />
+        <pathelement path="lib/commons-math3-3.6.1.jar"/>
+    </path>
+
+    <target name="compile" depends="init">
+        <echo> =================== Compiling ========================= </echo>
+        <javac debug="true" excludes="" includeantruntime="false" destdir="${compile}" classpathref="cps.classpath">
+            <src refid="cps.sources"/>    
+        </javac>
+    </target>
+
+    <target name="dist" depends="clean,init,compile"
+            description="Generer la distribution" >
+        <!-- tout mettre dans l'archive -->
+        <jar basedir="${compile}" jarfile="bcm.jar"/>
+    </target>
+
+    <target name="clean"
+        description="clean up" >	
+        <echo>================ Removing compile directory ================</echo>    
+	    <delete dir="${compile}"/>
+    </target>
+
+</project>

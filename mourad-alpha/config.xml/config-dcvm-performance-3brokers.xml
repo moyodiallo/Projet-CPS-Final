@@ -1,0 +1,21 @@
+<deployment>
+    <hosts>
+        <host name="localhost" dir="../" />
+    </hosts>
+    <cyclicBarrier hostname="localhost" port="55253" />
+    <globalRegistry hostname="localhost" port="55252" />
+    <rmiRegistryPort no="55999" />
+    <jvms2hostnames>
+        
+        <jvm2hostname 
+            jvmuri="brokerURI-0" rmiRegistryCreator="true" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance3brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-1" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance3brokers" />
+        <jvm2hostname 
+            jvmuri="brokerURI-2" rmiRegistryCreator="false" 
+            hostname="localhost" mainclass="cps.mouradalpha.DCVMPerformance3brokers" />
+
+    </jvms2hostnames>
+</deployment>

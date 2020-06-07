@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Compte Rendu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <h2>Compte Rendu CPS</h2>
+    <h3>Réalisé par :</h3>
+    DIALLO Alpha Issiaga / TOUATI Mourad
+    <hr />
+
+    <h4>1. Préparation de l’étape 3</h4>
+    <p>
+      Avant d’entamer l’étape 3 du projet, nous avons d’abord pris en
+      considération les remarques fourni dans la fiche d'évaluation en ajoutant
+      entres autres :
+    </p>
+    <ul>
+      <li>Des tests unitaires avec Junit 4;</li>
+      <li>
+        La gestion de la concurrence au sein du courtier avec l’utilisation des
+        nos propre classes : <strong>MyConcurrentHashMap</strong> et
+        <strong>MyConcurrentLinkedQueue</strong> qui autorisent plusieurs
+        opérations de lecteur au même temps mais une seule opération d'écriture
+        à la fois (Ceci est garanti avec
+        <strong>ReentrantReadWriteLock</strong> qui nous offre les méthodes
+        <strong>writeLock</strong> <strong>readLock</strong> );
+      </li>
+      <li>
+        L’utilisation de pools de threads (distinguer les opérations de lecture
+        et d’écriture) pour apporter du parallélisme;
+      </li>
+      <li>
+        Assurer un accès en exclusion mutuel aux sections critiques ( création
+        d’un topic par exemple );
+      </li>
+      <li>
+        Enfin, nous avons proposé des tests d’intégrations qui couvrent toutes
+        les méthodes des interfaces de composants.
+      </li>
+    </ul>
+    <h4>2. Structure du projet</h4>
+
+    <ol>
+      <li>Le dossier doc contient la javadoc ainsi que le compte rendu du projet.</li>
+      <li>
+        Le dossier  mourad-alpha contient le code source du projet : 
+          <ul>
+            <li>Un build.xml pour ant.</li>
+            <li>Le dossier lib qui contient (bcm.jar, javassist.jar, jing.jar, commons-math3-3.6.1.jar, jcip-annotations.jar, junit.jar) nécessaire au lancement du projet.</li>
+            <li>Les scriptes pour les tests de performance.</li>
+            <li>Le dossier src pour les classes.</li>
+          </ul>
+
+      </li>
+    </ol>
+
+
+    <h4>3. Etape 3 - Répartition du courtier</h4>
+    <p>
+      l’objectif de cette étape est d’avoir une configuration où nous avons
+      plusieurs JVMs tel que dans chacune d’elle résident un composant courtier,
+      des composants souscripteurs et des composants publieurs, les composants
+      courtier sont reliés entre eux afin d’acheminer des messages publiés dans
+      une JVM A par un publieurs vers des souscripteurs qui se trouvent dans une
+      JVM B. Afin de parvenir à cet objectif, nous avons opté pour une
+      architecture maillé où chaque broker est connecté aux autres broker qui se
+      trouvent dans des JVMs différentes.
+    </p>
+    <p>
+      Nous avons modifié le code du Broker en ajoutant des ports (<strong
+        >InBoundPortNotification</strong
+      >
+      / <strong>OutBoundPortNotification</strong> ) qui implémente l’interface
+      <strong>NotificationCI</strong> pour la notification, cette dernière
+      concerne les opérations (<em
+        >Création d’un topic, publication de message(s), destruction d’un
+        topic</em
+      >). Afin de gérer les notification qui peuvent arriver à tout moment nous
+      avons un pool de thread (pour les opérations d’écriture) dédié à cela,
+      l’index <strong>writeExecutorIndex</strong> qui se trouve
+      <strong>InBoundPortNotification</strong> permet d’identifier ce dernier
+      dans le broker.
+    </p>
+    <p>
+      La modification concerne également le constructeur du composant Broker qui
+      prendra dorénavant en paramètres un tableau des URIs des autres Brokers,
+      ce qui lui permet de se connecter à eux.
+    </p>
+
+    <h4>4. Etape 4 - Tests de performance </h4>
+    <p>Afin de réaliser cette étape, nous avons créé deux composants ( <strong>PublisherPerformance</strong>  et  <strong>SubscriberPerformance</strong> ) avec des scénarios qui couvrent toutes les méthodes des composant publieurs et souscripteurs, nous avons également randomisé ces scénarios afin d’avoir des exécutions différentes pour chacune des instances  de ces composants. </p>
+    <p>à partir de la nouvelle version du Broker ainsi que les composants PublisherPerformance et SubscriberPerformance, nous avons créé 3 DCVM : 
+      <ul>
+      <li> <strong>DCVMPerformance3brokers:</strong>  3 Brokers avec des composants PublisherPerformance et  SubscriberPerformance.</li>
+      <li> <strong>DCVMPerformance4brokers:</strong>  4 Brokers avec des composants PublisherPerformance et  SubscriberPerformance.</li>
+      <li> <strong>DCVMPerformance5brokers:</strong>  5 Brokers avec des composants PublisherPerformance et  SubscriberPerformance.</li>
+      </ul>
+    
+    </p>
+    <p> Lors de l'exécution d’un DCVM on sauvegarde les log de chaque composant et  grâce au traitement qui se trouvent dans le scripte performance.sh, on arrive à obtenir les résultats qui se trouvent dans les figures suivantes.  </p>
+    <p>	Nous avons effectué nos tests selons deux métriques principale : 
+      <ul>
+        <li>Total des requêtes émise par les publishers + Total des requêtes émise par les subscribers = Total des requêtes reçu par les Brokers </li>
+        <li>La distribution en attente doit être minime : distribution en attente / Total des notifications effectuées sur les brokers = 100 %</li>
+      </ul>
+      Nous avons commencé à tester nos DCVM avec 100 Publishers et 100 Subscribers nous avons remarqué des incohérence avec les métriques, ensuite nous avons effectué d’autres tests jusqu'à en arriver au résultat où 30 Publishers et 30 Subscribers permet d’obtenir de très bon résultat. (On arrive à avoir un échange de plus de 5 millions de messages au bout de 35 s de l'exécution )
+      <br>
+     <strong>Remarques:</strong> 
+     <ul>
+        <li>  Nous avons constaté que les fenêtres des composants ralentissent beaucoup l’exécution, de ce fait, nous avons décidé de ne plus l'afficher.
+        </li>
+        <li>Les tests ont été fait sur les machine de l’université</li>
+     </ul> 
+    </p>
+    <h3>Résultat de DCVMPerformance3brokers : </h2>
+    <br>
+    <img src="img/3broker.png" alt="3 Brokers" width="1500">
+
+    <h3>Résultat de DCVMPerformance4brokers : </h2>
+      <br>
+      <img src="img/4broker.png" alt="4 Brokers"width="1500" >
+
+      <h3>Résultat de DCVMPerformance5brokers : </h2>
+        <br>
+        <img src="img/5broker.png" alt="5 Brokers"width="1500" >
+<p>Nous avons même testé notre projet avec un DCVM de 10 Brokers avec 20 Publishers et 20 Subscribers, les résultats suivant : </p>
+<img src="img/10Broker.png" alt="10 Brokers"width="1500" >
+
+
+    <h4>5. Manuel d’utilisation</h4>
+    <ol>
+      <li>ant dist : Pour la compilation </li>
+      <li>choisir une configuration : 
+          <ul>
+            <li>Configuration avec 3 Brokers :
+              <ol>
+                <li>./start-cyclicbarrier-performance-3-broker&</li>
+                <li>./start-gregistry-performance-3-broker&</li>
+                <li>./start-performance-3-broker-all</li>
+              </ol>
+            </li>
+
+            <li>Configuration avec 4 Brokers :
+              <ol>
+                <li>./start-cyclicbarrier-performance-4-broker&</li>
+                <li>./start-gregistry-performance-4-broker&</li>
+                <li>./start-performance-4-broker-all</li>
+              </ol>
+            </li>
+            <li>Configuration avec 5 Brokers :
+              <ol>
+                <li>./start-cyclicbarrier-performance-5-broker&</li>
+                <li>./start-gregistry-performance-5broker&</li>
+                <li>./start-performance-5-broker-all</li>
+              </ol>
+            </li>
+          </ul>
+
+      </li>
+      <li>/performance.sh  : Pour afficher les résultat des tests. </li>
+    </ol>
+    
+  </body>
+</html>

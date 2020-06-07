@@ -1,0 +1,3 @@
+#!/bin/bash
+java -Xms2m -cp lib/bcm.jar:lib/jing.jar:.  fr.sorbonne_u.components.registry.GlobalRegistry \
+    config.xml/config-dcvm_basic.xml
